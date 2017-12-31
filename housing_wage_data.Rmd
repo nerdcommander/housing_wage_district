@@ -1,0 +1,145 @@
+---
+title: "housing_wage_data"
+author: "brian avery"
+date: "December 30, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Purpose  
+
+Collate data to make visible the proportion of households in each legislative district that make below what is required to rent a 2 bedroom apartment in their county.  
+
+for [Utahns for Fair Wages](https://www.utahnsforfairwages.org/)  
+
+## Preliminaries
+
+load packages
+```{r message=FALSE}
+# for dplyr (and maybe ggplot2)
+library(tidyverse)
+
+# for kable for better looking html tables at end
+library(knitr)
+```
+
+## Income data by district  
+
+bring the income data csv files in.
+
+```{r}
+house <- read.csv("House_table19c.csv")
+senate <- read.csv("Senate_table19c.csv")
+```
+
+start cleaning:  
+remove `%` signs from percent columns all at once.  
+idea from: https://stackoverflow.com/questions/32857873/remove-a-character-from-the-entire-data-frame
+
+```{r}
+senate[] <- lapply(senate, gsub, pattern='%', replacement='')
+house[] <- lapply(house, gsub, pattern='%', replacement='')
+```
+
+convert character values to numbers.  
+
+```{r}
+senate[] <- lapply(senate, as.numeric)
+house[] <- lapply(house, as.numeric)
+```
+
+<b>House data:</b>  
+only need first 2 percentage columns, but sorted by rank so districts in different orders.
+first, make 2 separate dataframes, 1 for each of the 2 lowest brackets and sort by district.
+
+```{r}
+houseL1 <- house[,c("District_L15", "Percent_L15")]
+houseL1 <- arrange(houseL1, District_L15)
+
+houseL2 <- house[,c("District_1530", "Percent_1530")]
+houseL2 <- arrange(houseL2, District_1530)
+```
+
+now combine them together and make a combined column by adding the percentages together.
+then only keep the total column and relabel the columns.
+
+```{r}
+houseLcomp <- houseL1
+houseLcomp$Percent_1530 <- houseL2$Percent_1530
+houseLcomp$total_below30 <- houseLcomp$Percent_L15 + houseLcomp$Percent_1530
+houseLcomp <- select(houseLcomp, District=District_L15, `%district<30K/yr`=total_below30)
+```
+
+<b>Senate data:</b>  
+only need first 2 percentage columns, but sorted by rank so districts in different orders.
+first, make 2 separate dataframes, 1 for each of the 2 lowest brackets and sort by district.  
+
+```{r}
+senateL1 <- senate[,c("District_L15", "Percent_L15")]
+senateL1 <- arrange(senateL1, District_L15)
+
+senateL2 <- senate[,c("District_1530", "Percent_1530")]
+senateL2 <- arrange(senateL2, District_1530)
+```
+
+now combine them together and make a combined column by adding the percentages together.
+then only keep the total column and relabel the columns.
+
+```{r}
+senateLcomp <- senateL1
+senateLcomp$Percent_1530 <- senateL2$Percent_1530
+senateLcomp$total_below30 <- senateLcomp$Percent_L15 + senateLcomp$Percent_1530
+senateLcomp <- select(senateLcomp, District=District_L15, `%district<30K/yr`=total_below30)
+```
+
+## Housing wages and district/county key  
+
+bring in housing wage data and key that links district to county
+
+```{r}
+hwage <- read.csv("Housing_Wage_County.csv")
+house_counties <- read.csv("house_counties.csv")
+senate_counties <- read.csv("senate_counties.csv")
+```
+
+join Senate data and make `estimate` column to indicate whether the final percentage is an over or under estimate.
+
+```{r}
+senate_j1 <- inner_join(senate_counties, hwage)
+senate_j2 <- inner_join(senate_j1, senateLcomp)
+senate_j2$estimate <- ifelse(senate_j2$hw_year>30000, "under", "over")
+```
+
+join House data and make `estimate` column to indicate whether the final percentage is an over or under estimate.
+
+```{r}
+house_j1 <- inner_join(house_counties, hwage)
+house_j2 <- inner_join(house_j1, houseLcomp)
+house_j2$estimate <- ifelse(house_j2$hw_year>30000, "under", "over")
+```
+
+## Final products  
+
+write final dataframes to csv files.
+
+```{r}
+write.csv(senate_j2, file="senate_housing_wage.csv", row.names = FALSE)
+write.csv(house_j2, file="house_housing_wage.csv", row.names = FALSE)
+```
+
+make a prettier final table of House data.  
+
+```{r}
+kable(house_j2)
+```
+
+make a prettier final table of Senate data.  
+
+```{r}
+kable(senate_j2)
+```
+
+
