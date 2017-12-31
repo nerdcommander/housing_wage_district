@@ -1,5 +1,10 @@
 # housing_wage_district
-## link to product
+## products
+the 2 final tables are the csv files called:  
+senate_housing_wage.csv  
+house_housing_wage.csv  
+
+the whole analysis can be seen at:  
 https://rawgit.com/nerdcommander/housing_wage_district/master/housing_wage_data.html
 
 ## purpose  
