@@ -1,4 +1,7 @@
 # housing_wage_district
+## link to product
+https://rawgit.com/nerdcommander/housing_wage_district/master/housing_wage_data.html
+
 ## purpose  
 Collate data to make visible the proportion of households in each legislative district that make below what is required to rent a 2 bedroom apartment in their county.  
 
