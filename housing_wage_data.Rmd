@@ -28,7 +28,11 @@ library(knitr)
 
 ## Income data by district  
 
-bring the income data csv files in.
+bring the income data csv files in.  
+House data from Table 19 on pg 89  
+URL: https://le.utah.gov/Documents/DistrictMaps/House_Dist01.pdf  
+Senate data from Table 19 on pg 89  
+URL: https://le.utah.gov/Documents/DistrictMaps/Senate_Dist01.pdf  
 
 ```{r}
 house <- read.csv("House_table19c.csv")
@@ -37,7 +41,7 @@ senate <- read.csv("Senate_table19c.csv")
 
 start cleaning:  
 remove `%` signs from percent columns all at once.  
-idea from: https://stackoverflow.com/questions/32857873/remove-a-character-from-the-entire-data-frame
+idea from: https://stackoverflow.com/questions/32857873/remove-a-character-from-the-entire-data-frame  
 
 ```{r}
 senate[] <- lapply(senate, gsub, pattern='%', replacement='')
@@ -97,7 +101,13 @@ senateLcomp <- select(senateLcomp, District=District_L15, `%district<30K/yr`=tot
 
 ## Housing wages and district/county key  
 
-bring in housing wage data and key that links district to county
+bring in housing wage data and key that links district to county  
+Housing wage data from Figure 5 on pg 9  
+URL: https://jobs.utah.gov/housing/publications/documents/affordablehousingplan.pdf  
+house district county info:  
+URL: http://le.utah.gov/house2/representatives.jsp  
+senate district county info:  
+URL: http://senate.utah.gov/senators/full-roster.html  
 
 ```{r}
 hwage <- read.csv("Housing_Wage_County.csv")

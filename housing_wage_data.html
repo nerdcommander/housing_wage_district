@@ -140,7 +140,11 @@ library(knitr)</code></pre>
 </div>
 <div id="income-data-by-district" class="section level2">
 <h2>Income data by district</h2>
-<p>bring the income data csv files in.</p>
+<p>bring the income data csv files in.<br />
+House data from Table 19 on pg 89<br />
+URL: <a href="https://le.utah.gov/Documents/DistrictMaps/House_Dist01.pdf" class="uri">https://le.utah.gov/Documents/DistrictMaps/House_Dist01.pdf</a><br />
+Senate data from Table 19 on pg 89<br />
+URL: <a href="https://le.utah.gov/Documents/DistrictMaps/Senate_Dist01.pdf" class="uri">https://le.utah.gov/Documents/DistrictMaps/Senate_Dist01.pdf</a></p>
 <pre class="r"><code>house &lt;- read.csv(&quot;House_table19c.csv&quot;)
 senate &lt;- read.csv(&quot;Senate_table19c.csv&quot;)</code></pre>
 <p>start cleaning:<br />
@@ -178,7 +182,13 @@ senateLcomp &lt;- select(senateLcomp, District=District_L15, `%district&lt;30K/y
 </div>
 <div id="housing-wages-and-districtcounty-key" class="section level2">
 <h2>Housing wages and district/county key</h2>
-<p>bring in housing wage data and key that links district to county</p>
+<p>bring in housing wage data and key that links district to county<br />
+Housing wage data from Figure 5 on pg 9<br />
+URL: <a href="https://jobs.utah.gov/housing/publications/documents/affordablehousingplan.pdf" class="uri">https://jobs.utah.gov/housing/publications/documents/affordablehousingplan.pdf</a><br />
+house district county info:<br />
+URL: <a href="http://le.utah.gov/house2/representatives.jsp" class="uri">http://le.utah.gov/house2/representatives.jsp</a><br />
+senate district county info:<br />
+URL: <a href="http://senate.utah.gov/senators/full-roster.html" class="uri">http://senate.utah.gov/senators/full-roster.html</a></p>
 <pre class="r"><code>hwage &lt;- read.csv(&quot;Housing_Wage_County.csv&quot;)
 house_counties &lt;- read.csv(&quot;house_counties.csv&quot;)
 senate_counties &lt;- read.csv(&quot;senate_counties.csv&quot;)</code></pre>
